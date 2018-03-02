@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border:1px solid red;
+        }
+        img {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>
+<script src="js/util1.js"></script>
+<script src="js/bird1.js"></script>
+<script src="js/land1.js"></script>
+<script src="js/pipe1.js"></script>
+<script src="js/sky1.js"></script>
+<script src="js/gameScene1.js"></script>
+<script src="js/overScene1.js"></script>
+<script>
+    var cvs = document.getElementById("canvas");
+    var ctx = cvs.getContext("2d");
+    util.loadImage({
+        //要加载的图片列表
+        bird: 'img/bird.png',
+        land: 'img/land.png',
+        pipeDown: 'img/pipeDown.png',
+        pipeUp: 'img/pipeUp.png',
+        sky: 'img/sky.png'},
+    function(imgObj){
+        cvs.width = imgObj.sky.width;//计算画布宽
+        cvs.height = imgObj.sky.height;//计算画布高
+        //创建游戏场景
+        var gameScene = getGameScene(ctx,imgObj);
+        //创建游戏结束常场景
+        var overScene = getOverScene(ctx);
+        //游戏场景是否继续
+        var isRun = true;
+        gameScene.addListener(function(){
+//                clearInterval(timer);//清除定时器
+            isRun = false;
+                overScene.draw();
+//                return;//终止函数往下执行
+            });
+        //让画面动起来
+//        var timer = setInterval(function(){
+//            gameScene.draw();
+//        },50);
+        (function run(){
+            gameScene.draw();
+            if(isRun){
+                requestAnimationFrame(run);
+            }
+        }());
+    })
+</script>
+</body>
+</html>
